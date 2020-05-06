@@ -4,9 +4,9 @@ var mysql = require('mysql')
 module.exports = function (sql, callBack) {
     //配置数据库
     var connection = mysql.createConnection({
-        hose: 'localhost',
+        host: '127.0.0.1',
         user: 'root',
-        password: 'root',
+        password: 'Admin_2017',
         port: 3306,
         database: 'vuedata'
     })

@@ -1,63 +1,68 @@
+var url = require('url')
 var dbConfig = require('../util/dbconfig')
 var dbinsertcon = require('../util/dbinsertcon')
 
+
 function multiData (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("X-Powered-By",' 3.2.1')
+    res.header("Content-Type", "application/json;charset=utf-8");
     var sql = 'select * from banners';
     var resData = {
         banners: [],
         recommand: []
     }
-
-    // var recommandSql = 'select * from recommand'
-    // dbConfig(recommandSql, function (error, data) {
-    //     if(error){
-    //         console.log("homeController-multiData" + error)
-    //     }
-    //     resData.recommand = JSON.parse(JSON.stringify(data))
-    //   })
-      dbConfig(sql, function (error, data) {
+    var recommandSql = 'select * from recommand'
+    dbConfig(recommandSql, function (error, data) {
+        if(error){
+            console.log("homeController-multiData" + error)
+        }
+        resData.recommand = JSON.parse(JSON.stringify(data))
+        if(resData.banners.length > 0){
+            res.send(resData);
+        }
+      })
+    dbConfig(sql, function (error, data) {
         if(error){
             console.log("homeController-multiData" + error)
         }
         resData.banners = JSON.parse(JSON.stringify(data))
-        res.send(resData);
-      })
-
-   
+        if(resData.recommand.length > 0){
+            res.send(resData);
+        }
+    })
 }
 
-function insertMultiData (req, res) {
-    var sql = "INSERT INTO recommand(`acm`,`image`,`link`, `sort`, `title`) VALUES ?"
-    var insertData =  [
-        {
-            "acm": "3.mce.2_10_1dggc.13730.0.ccy5br4OlfK0U.pos_0-m_313898-sd_119",
-            "image": "https://s10.mogucdn.com/mlcdn/c45406/180913_036dli57aah85cb82l1jj722g887g_225x225.png",
-            "link": "http://act.meilishuo.com/10dianlingquan?acm=3.mce.2_10_1dggc.13730.0.ccy5br4OlfK0U.pos_0-m_313898-sd_119",
-            "sort": 1,
-            "title": "\u5341\u70b9\u62a2\u5238"
-        },
-        {
-            "acm": "3.mce.2_10_1dgge.13730.0.ccy5br4OlfK0V.pos_1-m_313899-sd_119",
-            "image": "https://s10.mogucdn.com/mlcdn/c45406/180913_25e804lk773hdk695c60cai492111_225x225.png",
-            "link": "https://act.mogujie.com/tejiazhuanmai09?acm=3.mce.2_10_1dgge.13730.0.ccy5br4OlfK0V.pos_1-m_313899-sd_119",
-            "sort": 2,
-            "title": "\u597d\u7269\u7279\u5356"
-        },
-        {
-            "acm": "3.mce.2_10_1b610.13730.0.ccy5br4OlfK0W.pos_2-m_260486-sd_119",
-            "image": "https://s10.mogucdn.com/mlcdn/c45406/180913_387kgl3j21ff29lh04181iek48a6h_225x225.png",
-            "link": "http://act.meilishuo.com/neigouful001?acm=3.mce.2_10_1b610.13730.0.ccy5br4OlfK0W.pos_2-m_260486-sd_119",
-            "sort": 3,
-            "title": "\u5185\u8d2d\u798f\u5229"
-        },
-        {
-            "acm": "3.mce.2_10_1dggg.13730.0.ccy5br4OlfK0X.pos_3-m_313900-sd_119",
-            "image": "https://s10.mogucdn.com/mlcdn/c45406/180913_8d4e5adi8llg7c47lgh2291akiec7_225x225.png",
-            "link": "http://act.meilishuo.com/wap/yxzc1?acm=3.mce.2_10_1dggg.13730.0.ccy5br4OlfK0X.pos_3-m_313900-sd_119",
-            "sort": 4,
-            "title": "\u521d\u79cb\u4e0a\u65b0"
+function getProductList (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("X-Powered-By",' 3.2.1')
+    res.header("Content-Type", "application/json;charset=utf-8");
+    var urlObj = url.parse(req.url, true);
+    console.log(urlObj);
+    var type = urlObj.query.type;
+    var page = urlObj.query.page;
+    var num1 = 40 * (page - 1);
+    var num2 = 40 * page;
+
+    var sql = 'select * from goods LIMIT '+ num1 + ','+ num2;
+    dbConfig(sql, function (error, data) {
+        if(error){
+            console.log("getProductList" + error)
         }
-    ]
+        goodsList = JSON.parse(JSON.stringify(data))
+        res.send({goodsList: goodsList});
+    })
+}
+
+
+
+function insertMultiData (req, res) {
+   
+
     //把对象的转成纯数组
     var values = [];
     insertData.forEach(function(n, i){
@@ -77,5 +82,6 @@ function insertMultiData (req, res) {
 
 module.exports = {
     multiData: multiData,
+    getProductList: getProductList,
     // insertMultiData: insertMultiData
 }
