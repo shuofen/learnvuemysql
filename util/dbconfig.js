@@ -6,7 +6,7 @@ module.exports = function (sql, callBack) {
     var connection = mysql.createConnection({
         host: '127.0.0.1',
         user: 'root',
-        password: 'Admin_2017',
+        password: 'root',
         port: 3306,
         database: 'vuedata'
     })

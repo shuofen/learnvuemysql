@@ -4,11 +4,6 @@ var dbinsertcon = require('../util/dbinsertcon')
 
 
 function multiData (req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-    res.header("X-Powered-By",' 3.2.1')
-    res.header("Content-Type", "application/json;charset=utf-8");
     var sql = 'select * from banners';
     var resData = {
         banners: [],
@@ -36,13 +31,7 @@ function multiData (req, res) {
 }
 
 function getProductList (req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
-    res.header("X-Powered-By",' 3.2.1')
-    res.header("Content-Type", "application/json;charset=utf-8");
     var urlObj = url.parse(req.url, true);
-    console.log(urlObj);
     var type = urlObj.query.type;
     var page = urlObj.query.page;
     var num1 = 40 * (page - 1);
